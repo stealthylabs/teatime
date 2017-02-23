@@ -7,7 +7,7 @@ GLEWINC=$(shell $(PKGCONFIG) --cflags glew)
 GLEWLIB=$(shell $(PKGCONFIG) --libs glew)
 INC=-I$(PWD) $(GLEWINC)
 LDFLAGS=
-GLLIBS=-lglut -lGL $(GLEWLIB)
+GLLIBS=-lglut -lGL $(GLEWLIB) -lm
 
 default: teatime
 
