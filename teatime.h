@@ -7,6 +7,17 @@
 #ifndef __TEATIME_H__
 #define __TEATIME_H__
 
+#ifdef WIN32
+    #include <windows.h>
+    #define int32_t INT32
+    #define int8_t INT8
+    #define int64_t INT64
+    #define int16_t INT16
+    #define uint32_t UINT32
+    #define uint8_t UINT8
+    #define uint64_t UINT64
+    #define uint16_t UINT16
+#endif
 #include <GL/glew.h>
 #include <GL/glut.h>
 

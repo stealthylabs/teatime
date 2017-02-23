@@ -12,7 +12,7 @@
 #include <math.h>
 #include <teatime.h>
 
-void teatime_demo();
+void teatime_demo(void);
 
 void TEA_cpu_encrypt(const uint32_t input[2],
                    const uint32_t key[4],
@@ -60,7 +60,7 @@ void teapot_reshape(int w, int h)
     glMatrixMode(GL_MODELVIEW);
 }
 
-void teapot_render()
+void teapot_render(void)
 {
     float lpos[4] = { 1, 0.5, 1, 0};
     glEnable(GL_DEPTH_TEST);
@@ -75,7 +75,7 @@ void teapot_render()
 	glutSwapBuffers();
 }
 
-void teapot_idle()
+void teapot_idle(void)
 {
     static int _demo = 0;
     if (_demo++ == 0)
@@ -85,7 +85,7 @@ void teapot_idle()
 #define INPUT_SZ 64
 #define TEA_ROUNDS 32
 
-void teatime_demo()
+void teatime_demo(void)
 {
     int rc = 0;
     teatime_t *tea = NULL;

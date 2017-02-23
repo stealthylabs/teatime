@@ -123,6 +123,7 @@ int teatime_create_textures(teatime_t *obj, const uint32_t *input, uint32_t ilen
             /* the texture target can vary depending on GPU */
             glBindTexture(GL_TEXTURE_2D, obj->itexid);
             TEATIME_BREAKONERROR(glBindTexture, rc);
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
             /* turn off filtering and set proper wrap mode - this is obligatory for
              * floating point textures */
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -376,6 +377,8 @@ int teatime_check_gl_errors(int line, const char *fn_name)
         fprintf(stderr, "%s(): GL Error(%d) on line %d: %s\n", fn_name,
                 err, line, (const char *)estr);
         return -1;
+    } else {
+        fprintf(stderr, "%s(): No error on line %d\n", fn_name, line);
     }
     return 0;
 }
