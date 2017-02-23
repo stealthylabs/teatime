@@ -143,9 +143,18 @@ int teatime_create_textures(teatime_t *obj, const uint32_t *input, uint32_t ilen
                     texsz, texsz, 0, GL_RGBA_INTEGER, GL_UNSIGNED_INT, NULL);
             TEATIME_BREAKONERROR(glTexImage2D, rc);
             /* transfer data to texture */
-            glTexSubImage2DEXT(GL_TEXTURE_2D, 0, 0, 0, obj->tex_size,
+#ifdef WIN32
+            glTexSubImage2D
+#else
+            glTexSubImage2DEXT
+#endif
+                (GL_TEXTURE_2D, 0, 0, 0, obj->tex_size,
                     obj->tex_size, GL_RGBA_INTEGER, GL_UNSIGNED_INT, input);
+#ifdef WIN32
+            TEATIME_BREAKONERROR(glTexSubImage2D, rc);
+#else
             TEATIME_BREAKONERROR(glTexSubImage2DEXT, rc);
+#endif
             fprintf(stderr, "Successfully transferred input data to texture ID: %u\n", obj->itexid);
             /* BIND the OUTPUT texture and work on it */
             /* the texture target can vary depending on GPU */
@@ -377,8 +386,6 @@ int teatime_check_gl_errors(int line, const char *fn_name)
         fprintf(stderr, "%s(): GL Error(%d) on line %d: %s\n", fn_name,
                 err, line, (const char *)estr);
         return -1;
-    } else {
-        fprintf(stderr, "%s(): No error on line %d\n", fn_name, line);
     }
     return 0;
 }
@@ -466,9 +473,9 @@ int teatime_check_shader_errors(GLuint shader)
 "out uvec4 odata; \n" \
 "void main(void) {\n" \
 " uvec4 x = texture(idata, gl_TexCoord[0].st);\n" \
-" uint delta = 0x9e3779b9; \n" \
-" uint sum = 0; \n" \
-" for (uint i = 0; i < rounds; ++i) {\n" \
+" uint delta = uint(0x9e3779b9); \n" \
+" uint sum = uint(0); \n" \
+" for (uint i = uint(0); i < rounds; ++i) {\n" \
 "  sum += delta; \n" \
 "  x[0] += (((x[1] << 4) + ikey[0]) ^ (x[1] + sum)) ^ ((x[1] >> 5) + ikey[1]);\n" \
 "  x[1] += (((x[0] << 4) + ikey[2]) ^ (x[0] + sum)) ^ ((x[0] >> 5) + ikey[3]);\n" \
@@ -487,9 +494,9 @@ int teatime_check_shader_errors(GLuint shader)
 "out uvec4 odata; \n" \
 "void main(void) {\n" \
 " uvec4 x = texture(idata, gl_TexCoord[0].st);\n" \
-" uint delta = 0x9e3779b9; \n" \
+" uint delta = uint(0x9e3779b9); \n" \
 " uint sum = delta * rounds; \n" \
-" for (uint i = 0; i < rounds; ++i) {\n" \
+" for (uint i = uint(0); i < rounds; ++i) {\n" \
 "  x[1] -= (((x[0] << 4) + ikey[2]) ^ (x[0] + sum)) ^ ((x[0] >> 5) + ikey[3]);\n" \
 "  x[0] -= (((x[1] << 4) + ikey[0]) ^ (x[1] + sum)) ^ ((x[1] >> 5) + ikey[1]);\n" \
 "  x[3] -= (((x[2] << 4) + ikey[2]) ^ (x[2] + sum)) ^ ((x[2] >> 5) + ikey[3]);\n" \
